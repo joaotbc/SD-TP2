@@ -21,9 +21,9 @@ import microgram.api.java.Result;
 public final class JavaPosts implements Posts {
 
 	static JavaPosts Posts;
-	
+
 	private static final Set<String> EMPTY_SET = new HashSet<>();
-	
+
 	final Map<String, Post> posts = new ConcurrentHashMap<>();
 	final Map<String, Set<String>> likes = new ConcurrentHashMap<>();
 	final Map<String, Set<String>> userPosts = new ConcurrentHashMap<>();
@@ -36,26 +36,25 @@ public final class JavaPosts implements Posts {
 	public Result<Post> getPost(String postId) {
 		Post res = posts.get(postId);
 		if (res != null) {
-			res.setLikes( likes.getOrDefault(postId, Collections.emptySet()).size());
+			res.setLikes(likes.getOrDefault(postId, Collections.emptySet()).size());
 			return ok(res);
-		}
-		else
+		} else
 			return error(NOT_FOUND);
 	}
-	
+
 	@Override
 	public Result<String> createPost(Post post) {
 		String ownerId = post.getOwnerId();
-		
-		if( ! Profiles.getProfile( ownerId ).isOK() )
+
+		if (!Profiles.getProfile(ownerId).isOK())
 			return error(NOT_FOUND);
-		
+
 		String postId = post.getPostId();
 
 		posts.putIfAbsent(postId, post);
 		likes.putIfAbsent(postId, ConcurrentHashMap.newKeySet());
-		userPosts.computeIfAbsent(ownerId, (__) -> ConcurrentHashMap.newKeySet()).add( postId );
-		
+		userPosts.computeIfAbsent(ownerId, (__) -> ConcurrentHashMap.newKeySet()).add(postId);
+
 		return ok(postId);
 	}
 
@@ -69,7 +68,7 @@ public final class JavaPosts implements Posts {
 		} else
 			return error(NOT_FOUND);
 	}
-	
+
 	@Override
 	public Result<Void> like(String postId, String userId, boolean isLiked) {
 
@@ -95,7 +94,7 @@ public final class JavaPosts implements Posts {
 		else
 			return error(NOT_FOUND);
 	}
-	
+
 	@Override
 	public Result<List<String>> getPosts(String userId) {
 		Set<String> res = userPosts.get(userId);
@@ -105,27 +104,25 @@ public final class JavaPosts implements Posts {
 			return error(NOT_FOUND);
 	}
 
-
 	@Override
 	public Result<List<String>> getFeed(String userId) {
-		Set<String> following = Profiles.following(userId );
-		if( following != null ) {
+		Set<String> following = Profiles.following(userId);
+		if (following != null) {
 			List<String> feed = new ArrayList<>();
-			for( String followee : following )
-				feed.addAll( userPosts.getOrDefault( followee, EMPTY_SET ));
-			return ok( feed );
-		}
-		else
+			for (String followee : following)
+				feed.addAll(userPosts.getOrDefault(followee, EMPTY_SET));
+			return ok(feed);
+		} else
 			return error(NOT_FOUND);
 	}
 
-	int getUserPostsStats( String userId) {
+	int getUserPostsStats(String userId) {
 		return userPosts.getOrDefault(userId, EMPTY_SET).size();
 	}
-	
+
 	void deleteAllUserPosts(String userId) {
-		for( String postId : userPosts.getOrDefault(userId, EMPTY_SET))
-			deletePost( postId );
+		for (String postId : userPosts.getOrDefault(userId, EMPTY_SET))
+			deletePost(postId);
 	}
 
 }

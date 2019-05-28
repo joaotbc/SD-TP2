@@ -12,7 +12,7 @@ import utils.Queues;
 public class OrderedExecutor {
 
 	private static final String DEFAULT_KEY = "_";
-	
+
 	final KafkaClient kafka;
 	final MicrogramTopic topic;
 	final Map<Object, BlockingQueue<Result<?>>> queues;
@@ -28,7 +28,7 @@ public class OrderedExecutor {
 	public OrderedExecutor init(MicrogramOperationExecutor executor) {
 		kafka.subscribe((t, k, v, ko) -> {
 			System.err.printf("%s %s %s - %d\n", k, v, ko, System.currentTimeMillis());
-			
+
 			MicrogramOperation op = new MicrogramOperation(v);
 
 			Result<?> result = executor.execute(op);

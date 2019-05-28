@@ -17,19 +17,19 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 
 public final class JavaProfiles implements Profiles {
-	
+
 	static JavaProfiles Profiles;
-	
+
 	static final Set<String> DUMMY_SET = ConcurrentHashMap.newKeySet();
 
 	final Map<String, Profile> users = new ConcurrentHashMap<>();
 	final Map<String, Set<String>> followers = new ConcurrentHashMap<>();
 	final Map<String, Set<String>> following = new ConcurrentHashMap<>();
-		
+
 	public JavaProfiles() {
 		Profiles = this;
 	}
-	
+
 	@Override
 	public Result<Profile> getProfile(String userId) {
 		Profile res = users.get(userId);
@@ -37,8 +37,8 @@ public final class JavaProfiles implements Profiles {
 			return error(NOT_FOUND);
 
 		res.setFollowers(followers.get(userId).size());
-		res.setFollowing(following.get(userId).size());		
-		res.setPosts( Posts.getUserPostsStats(userId));
+		res.setFollowing(following.get(userId).size());
+		res.setPosts(Posts.getUserPostsStats(userId));
 		return ok(res);
 	}
 
@@ -62,13 +62,13 @@ public final class JavaProfiles implements Profiles {
 
 		for (String follower : followers.remove(userId))
 			following.getOrDefault(follower, DUMMY_SET).remove(userId);
-	
+
 		for (String followee : following.remove(userId))
 			followers.getOrDefault(followee, DUMMY_SET).remove(userId);
-	
+
 		users.remove(userId);
 		Posts.deleteAllUserPosts(userId);
-		
+
 		return ok();
 	}
 
@@ -76,7 +76,6 @@ public final class JavaProfiles implements Profiles {
 	public Result<List<Profile>> search(String prefix) {
 		return ok(users.values().stream().filter(p -> p.getUserId().startsWith(prefix)).collect(Collectors.toList()));
 	}
-
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
@@ -101,13 +100,13 @@ public final class JavaProfiles implements Profiles {
 			s1.add(userId2);
 			s2.add(userId1);
 		} else {
-			s1.remove(userId2); 
+			s1.remove(userId2);
 			s2.remove(userId1);
 		}
 		return ok();
 	}
 
 	Set<String> following(String userId) {
-		return following.get( userId );
+		return following.get(userId);
 	}
 }
