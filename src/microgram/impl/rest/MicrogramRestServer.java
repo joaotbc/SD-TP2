@@ -5,6 +5,8 @@ import static utils.Log.Log;
 import java.net.URI;
 import java.util.logging.Level;
 
+import javax.net.ssl.SSLContext;
+
 import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
@@ -19,13 +21,15 @@ import utils.Args;
 import utils.IP;
 
 public class MicrogramRestServer {
-	public static final int PORT = 18888;
+
+	public static final int PORT = 19999;
 	private static final String POSTS_SERVICE = "Microgram-Posts";
 	private static final String PROFILES_SERVICE = "Microgram-Profiles";
-	
-	public static String SERVER_BASE_URI = "http://%s:%s/rest";
+
+	public static String SERVER_BASE_URI = "https://%s:%s/rest";
 
 	public static void main(String[] args) throws Exception {
+
 		Args.use(args);
 
 		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "OFF");
@@ -38,16 +42,17 @@ public class MicrogramRestServer {
 
 		Discovery.announce(POSTS_SERVICE, serverURI + RestPosts.PATH);
 		Discovery.announce(PROFILES_SERVICE, serverURI + RestProfiles.PATH);
-	
+
 		ResourceConfig config = new ResourceConfig();
 
 		config.register(new ReplicatedPostsResources());
 		config.register(new ReplicatedProfilesResources());
-		
+
 		config.register(new PrematchingRequestFilter());
 		config.register(new GenericExceptionMapper());
 
-		JdkHttpServerFactory.createHttpServer(URI.create(serverURI.replace(ip, "0.0.0.0")), config);
+		JdkHttpServerFactory.createHttpServer(URI.create(serverURI.replace(ip, "0.0.0.0")), config,
+				SSLContext.getDefault());
 
 		Log.fine(String.format("Posts+Profiles Combined Rest Server ready @ %s\n", serverURI));
 	}
