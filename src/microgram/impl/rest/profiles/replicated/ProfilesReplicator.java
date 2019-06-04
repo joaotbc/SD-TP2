@@ -2,7 +2,7 @@ package microgram.impl.rest.profiles.replicated;
 
 import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ErrorCode.NOT_IMPLEMENTED;
-import static microgram.impl.rest.replication.MicrogramOperation.Operation.GetProfile;
+import static microgram.impl.rest.replication.MicrogramOperation.Operation.*;
 
 import java.util.List;
 
@@ -28,12 +28,29 @@ public class ProfilesReplicator implements MicrogramOperationExecutor, Profiles 
 	@Override
 	public Result<?> execute(MicrogramOperation op) {
 		switch (op.type) {
+		case GetProfile: {
+			return localReplicaDB.getProfile(op.arg(String.class));
+		}
 		case CreateProfile: {
 			return localReplicaDB.createProfile(op.arg(Profile.class));
+		}
+		case DeleteProfile: {
+			return localReplicaDB.deleteProfile(op.arg(String.class));
+		}
+		case SearchProfile: {
+			return localReplicaDB.search(op.arg(String.class));
 		}
 		case IsFollowing: {
 			String[] users = op.args(String[].class);
 			return localReplicaDB.isFollowing(users[FOLLOWER], users[FOLLOWEE]);
+		}
+		case FollowProfile: {
+			String[] users = op.args(String[].class);
+			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], false);
+		}
+		case UnFollowProfile: {
+			String[] users = op.args(String[].class);
+			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], true);
 		}
 		default:
 			return error(NOT_IMPLEMENTED);
@@ -47,31 +64,35 @@ public class ProfilesReplicator implements MicrogramOperationExecutor, Profiles 
 
 	@Override
 	public Result<Void> createProfile(Profile profile) {
-		// TODO Auto-generated method stub
-		return null;
+		return executor.replicate(new MicrogramOperation(CreateProfile, profile));
 	}
 
 	@Override
 	public Result<Void> deleteProfile(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		return executor.replicate(new MicrogramOperation(DeleteProfile, userId));
 	}
 
 	@Override
 	public Result<List<Profile>> search(String prefix) {
-		// TODO Auto-generated method stub
-		return null;
+		return executor.replicate(new MicrogramOperation(SearchProfile, prefix));
 	}
 
 	@Override
 	public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
-		// TODO Auto-generated method stub
-		return null;
+		String[] args = new String[2];
+		args[0] = userId1;
+		args[1] = userId2;
+		if(!isFollowing)
+			return executor.replicate(new MicrogramOperation(FollowProfile, args));
+		else
+			return executor.replicate(new MicrogramOperation(UnFollowProfile, args));
 	}
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
-		// TODO Auto-generated method stub
-		return null;
+		String[] args = new String[2];
+		args[0] = userId1;
+		args[1] = userId2;
+		return executor.replicate(new MicrogramOperation(IsFollowing, args));
 	}
 }

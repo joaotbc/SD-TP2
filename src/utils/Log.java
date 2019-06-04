@@ -8,24 +8,23 @@ import java.util.logging.Logger;
 
 public class Log {
 
-	public static Logger Log ;
-	
+	public static Logger Log;
+
 	static {
 		Log = Logger.getLogger("client");
-		
-		ConsoleHandler ch = new ConsoleHandler() ;
-		ch.setFormatter( new SimplerFormatter() ) ;
-		ch.setLevel( Level.ALL ) ;
-		Log.addHandler( ch ) ;
-		Log.setLevel( Level.ALL ) ;	
+
+		ConsoleHandler ch = new ConsoleHandler();
+		ch.setFormatter(new SimplerFormatter());
+		ch.setLevel(Level.ALL);
+		Log.addHandler(ch);
+		Log.setLevel(Level.ALL);
 	}
-	
-	
+
 	static class SimplerFormatter extends Formatter {
 
 		public String format(LogRecord r) {
-			return new StringBuilder().append( r.getMessage() ).append('\n').toString() ;
+			return new StringBuilder().append(r.getMessage()).append('\n').toString();
 		}
-		
+
 	}
 }
