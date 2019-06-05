@@ -5,14 +5,15 @@ import java.util.List;
 import microgram.api.Post;
 import microgram.api.java.Posts;
 import microgram.api.rest.RestPosts;
+import microgram.impl.mongo.MongoPosts;
 import microgram.impl.rest.RestResource;
 
 public class RestPostsResources extends RestResource implements RestPosts {
 
 	protected final Posts impl;
 
-	protected RestPostsResources(Posts impl) {
-		this.impl = impl;		
+	public RestPostsResources() {
+		this.impl = new MongoPosts();		
 	}
 
 	@Override

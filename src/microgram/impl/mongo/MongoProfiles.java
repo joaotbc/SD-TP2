@@ -90,7 +90,7 @@ public class MongoProfiles implements Profiles {
 
 		String regex = "^" + prefix + ".*";
 
-		MongoCursor<Profile> cursor = dbCol.find(Filters.eq(USERID, regex)).iterator();
+		MongoCursor<Profile> cursor = dbCol.find(Filters.regex(USERID, regex)).iterator();
 		while (cursor.hasNext()) {
 			res.add(cursor.next());
 		}
@@ -114,8 +114,8 @@ public class MongoProfiles implements Profiles {
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
-		if (dbCol.find(Filters.eq("userId1", userId1)).first() == null
-				|| dbCol.find(Filters.eq("userId2", userId2)).first() == null)
+		if (dbFollowing.find(Filters.eq("userId1", userId1)).first() == null
+				|| dbFollowing.find(Filters.eq("userId2", userId2)).first() == null)
 			return error(NOT_FOUND);
 		else {
 			Following res = dbFollowing

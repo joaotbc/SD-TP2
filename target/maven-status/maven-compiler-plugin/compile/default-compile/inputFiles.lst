@@ -7,7 +7,6 @@
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/msgs/CreateFolderV2Args.java
 /home/sd19/Desktop/git/sd-tp2/src/utils/Props.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/msgs/ListFolderV2Return.java
-/home/sd19/Desktop/git/sd-tp2/src/microgram/api/Followers.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/profiles/replicated/ReplicatedProfilesResources.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/ListDirectory.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/DropboxMedia.java
@@ -40,6 +39,7 @@
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/mongo/MongoProfiles.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/profiles/ProfilesRestServer.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/MicrogramRestServer.java
+/home/sd19/Desktop/git/sd-tp2/src/microgram/api/Following.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/profiles/RestProfilesResources.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/utils/GenericExceptionMapper.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/Post.java

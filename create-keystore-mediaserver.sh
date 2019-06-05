@@ -1,2 +1,2 @@
-keytool -genkey -alias server -keyalg RSA -validity 365 -keystore microgram.ks -storetype pkcs12
-keytool -exportcert -alias server -keystore microgram.ks -file microgram.cert
+keytool -genkey -alias mediaserver -keyalg RSA -validity 365 -keystore mediaserver.ks -storetype pkcs12
+keytool -exportcert -alias mediaserver -keystore mediaserver.ks -file mediaserver.cert
