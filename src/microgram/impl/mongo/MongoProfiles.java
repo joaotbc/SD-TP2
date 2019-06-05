@@ -95,7 +95,7 @@ public class MongoProfiles implements Profiles {
 
 		String regex = "^" + prefix + ".*";
 
-		MongoCursor<Profile> cursor = dbCol.find(Filters.eq(USERID, regex)).iterator();
+		MongoCursor<Profile> cursor = dbCol.find(Filters.regex(USERID, regex)).iterator();
 		while (cursor.hasNext()) {
 			res.add(cursor.next());
 		}
@@ -110,8 +110,14 @@ public class MongoProfiles implements Profiles {
 			return error(NOT_FOUND);
 		else {
 			if (isFollowing) {
+				if(isFollowing(userId1, userId2).value()) {
+					return error(CONFLICT);
+				} else
 				dbFollowing.insertOne(new Following(userId1, userId2));
 			} else {
+				if(!isFollowing(userId1, userId2).value()) {
+					return error(NOT_FOUND);
+				} else
 				dbFollowing.deleteOne(Filters.and(Filters.eq("userId1", userId1), Filters.eq("userId2", userId2)));
 			}
 		}
@@ -121,8 +127,8 @@ public class MongoProfiles implements Profiles {
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
 		// TODO Auto-generated method stub
-		if (dbCol.find(Filters.eq("userId1", userId1)).first() == null
-				|| dbCol.find(Filters.eq("userId2", userId2)).first() == null)
+		if (dbFollowing.find(Filters.eq("userId1", userId1)).first() == null
+				|| dbFollowing.find(Filters.eq("userId2", userId2)).first() == null)
 			return error(NOT_FOUND);
 		else {
 			Following res = dbFollowing
