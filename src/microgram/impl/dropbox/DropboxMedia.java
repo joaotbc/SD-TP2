@@ -1,12 +1,11 @@
 package microgram.impl.dropbox;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import org.pac4j.scribe.builder.api.DropboxApi20;
 
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -210,7 +209,6 @@ public class DropboxMedia implements Media {
 			upload.setPayload(bytes);
 			service.signRequest(accessToken, upload);
 			Response r = service.execute(upload);
-			
 			if(r.getCode() == 409) {
 				System.err.println("File already exists");
 				return Result.error(Result.ErrorCode.CONFLICT);
@@ -242,16 +240,17 @@ public class DropboxMedia implements Media {
 			download.addHeader("Content-Type", OCTETSTREAM_CONTENT_TYPE);
 			service.signRequest(accessToken, download);
 			Response r = service.execute(download);
-			System.err.println(r.getCode());
 			if(r.getCode() == 404) {
 				System.err.println("File not found");
 				return Result.error(Result.ErrorCode.NOT_FOUND);
 			} else if (r.getCode() == 200) {
 				System.err.println("File was downloaded with success");
-//				Map<String, String> result = JSON.decode(r.getBody());
-				File f = new File(ROOT_DIR + filename + MEDIA_EXTENSION);
-				System.err.println(f.exists());
-				return Result.ok(Files.readAllBytes(f.toPath()));
+				InputStream fi = r.getStream();
+				int len = fi.available();
+				byte[] buffer = new byte[len];
+				fi.read(buffer);
+				fi.close();
+				return Result.ok(buffer);
 			} else {
 				System.err.println("Unexpected error HTTP: " + r.getCode());
 				return Result.error(Result.ErrorCode.INTERNAL_ERROR);
@@ -275,8 +274,7 @@ public class DropboxMedia implements Media {
 			delete.setPayload(JSON.encode(new AccessFileV2Args(ROOT_DIR + filename + MEDIA_EXTENSION)));
 			service.signRequest(accessToken, delete);
 			Response r = service.execute(delete);
-			System.err.println(r.getCode());
-			if(r.getCode() == 404) {
+			if(r.getCode() == 409) {
 				System.err.println("File not found");
 				return Result.error(Result.ErrorCode.NOT_FOUND);
 			} else if (r.getCode() == 200) {

@@ -1,7 +1,6 @@
 
 package microgram.api;
 import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class UserPosts {
@@ -14,5 +13,13 @@ public class UserPosts {
 	    	this.userId = userId;
 	    	this.postId = postId;
 	    }
+
+		public String getUserId() {
+			return userId;
+		}
+
+		public String getPostId() {
+			return postId;
+		}
 
 }

@@ -1,6 +1,5 @@
 package microgram.api;
 import org.bson.codecs.pojo.annotations.BsonCreator;
-import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
 public class Likes {
