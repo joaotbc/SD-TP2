@@ -3,9 +3,7 @@ package microgram.impl.mongo;
 import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
-import static microgram.impl.java.JavaProfiles.Profiles;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.bson.codecs.configuration.CodecRegistries;
@@ -52,10 +50,10 @@ public class MongoPosts implements Posts {
 	@Override
 	public Result<String> createPost(Post post) {
 		// TODO Auto-generated method stub
-		String ownerId = post.getOwnerId();
-		
-		if (!Profiles.getProfile(ownerId).isOK())
-			return error(NOT_FOUND);
+//		String ownerId = post.getOwnerId();
+//		
+//		if (!Profiles.getProfile(ownerId).isOK())
+//			return error(NOT_FOUND);
 		
 		return null;
 	}

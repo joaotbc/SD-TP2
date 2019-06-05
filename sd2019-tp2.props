@@ -14,25 +14,25 @@ shared-process-backend-services-port=19999
 uses-kafka-bool=true
 uses-external-mongo-bool=false
 
-microgram-keystore=microgram.ks
+microgram-keystore=/home/sd/microgram.ks
 microgram-keystore-password=microgram
-microgram-truststore=microgram-truststore.ks
-microgram-truststore-password=microgram
+microgram-truststore=
+microgram-truststore-password=
 
-posts-keystore=posts.ks
-posts-keystore-password=restposts
-posts-truststore=posts-truststore.ks
-posts-truststore-password=restposts
+posts-keystore=
+posts-keystore-password=
+posts-truststore=
+posts-truststore-password=
 
-profiles-keystore=profiles.ks
-profiles-keystore-password=restprofiles
-profiles-truststore=profiles-truststore.ks
-profiles-truststore-password=restprofiles
+profiles-keystore=
+profiles-keystore-password=
+profiles-truststore=
+profiles-truststore-password=
 
-mediastorage-truststore=mediastorage-truststore.ks
-mediastorage-truststore-password=mediastorage
-mediastorage-keystore=mediastorage.ks
-mediastorage-keystore-password=mediastorage
+mediastorage-truststore=
+mediastorage-truststore-password=
+mediastorage-keystore=/home/sd/mediaserver.ks
+mediastorage-keystore-password=mediaserver
 
-tester-truststore=tester-ts.ks
-tester-truststore-password=tester
+tester-truststore=/home/sd/client-truststore.ks
+tester-truststore-password=changeit

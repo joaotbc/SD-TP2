@@ -216,8 +216,7 @@ public class DropboxMedia implements Media {
 				return Result.error(Result.ErrorCode.CONFLICT);
 			} else if (r.getCode() == 200) {
 				System.err.println("File was created with success");
-				Map<String, String> result = JSON.decode(r.getBody());
-				return Result.ok(result.get("id"));
+				return Result.ok(id);
 			} else {
 				System.err.println("Unexpected error HTTP: " + r.getCode());
 				return Result.error(Result.ErrorCode.INTERNAL_ERROR);
@@ -238,18 +237,21 @@ public class DropboxMedia implements Media {
 	 */
 	public Result<byte[]> download(String filename) {
 		try {
-			OAuthRequest download = new OAuthRequest(Verb.POST, DOWNLOAD_FILE_V2_URL);
+			OAuthRequest download = new OAuthRequest(Verb.GET, DOWNLOAD_FILE_V2_URL);
 			download.addHeader(DROPBOX_API_ARG, JSON.encode(new AccessFileV2Args(ROOT_DIR + filename + MEDIA_EXTENSION)));
 			download.addHeader("Content-Type", OCTETSTREAM_CONTENT_TYPE);
 			service.signRequest(accessToken, download);
 			Response r = service.execute(download);
-			
+			System.err.println(r.getCode());
 			if(r.getCode() == 404) {
 				System.err.println("File not found");
 				return Result.error(Result.ErrorCode.NOT_FOUND);
 			} else if (r.getCode() == 200) {
 				System.err.println("File was downloaded with success");
-				return Result.ok(r.getBody().getBytes());
+//				Map<String, String> result = JSON.decode(r.getBody());
+				File f = new File(ROOT_DIR + filename + MEDIA_EXTENSION);
+				System.err.println(f.exists());
+				return Result.ok(Files.readAllBytes(f.toPath()));
 			} else {
 				System.err.println("Unexpected error HTTP: " + r.getCode());
 				return Result.error(Result.ErrorCode.INTERNAL_ERROR);
@@ -273,7 +275,7 @@ public class DropboxMedia implements Media {
 			delete.setPayload(JSON.encode(new AccessFileV2Args(ROOT_DIR + filename + MEDIA_EXTENSION)));
 			service.signRequest(accessToken, delete);
 			Response r = service.execute(delete);
-			
+			System.err.println(r.getCode());
 			if(r.getCode() == 404) {
 				System.err.println("File not found");
 				return Result.error(Result.ErrorCode.NOT_FOUND);
@@ -282,7 +284,6 @@ public class DropboxMedia implements Media {
 				return Result.ok();
 			} else {
 				System.err.println("Unexpected error HTTP: " + r.getCode());
-				System.err.println(r.getBody());
 				return Result.error(Result.ErrorCode.INTERNAL_ERROR);
 			}
 		} catch (Exception e) {
