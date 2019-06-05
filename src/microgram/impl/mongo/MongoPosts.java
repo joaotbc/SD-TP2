@@ -47,7 +47,7 @@ public class MongoPosts implements Posts {
 		dbCol.createIndex(Indexes.ascending("postId"), new IndexOptions().unique(true));
 		dbUserPosts.createIndex(Indexes.ascending("postId"), new IndexOptions().unique(true));
 	}
-
+	
 	@Override
 	public Result<Post> getPost(String postId) {
 		Post res = dbCol.find(Filters.eq("postId", postId)).first();
@@ -123,10 +123,11 @@ public class MongoPosts implements Posts {
 		return ok(res);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Result<List<String>> getFeed(String userId) {
 		if (Profiles.getProfile(userId).isOK()) {
-			Set<String> following = Profiles.following(userId);
+			Set<String> following = (Set<String>) Profiles.following(userId).value();
 			List<String> feed = new ArrayList<>();
 			for (String followee : following) {
 				MongoCursor<UserPosts> c = dbUserPosts.find(Filters.eq("userId", followee)).iterator();
