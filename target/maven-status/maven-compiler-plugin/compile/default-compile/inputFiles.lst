@@ -1,6 +1,5 @@
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/java/Media.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/Profile.java
-/home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/CreateDirectory.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/rest/RestMedia.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/rest/RestProfiles.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/media/MediaRestServer.java
@@ -8,13 +7,11 @@
 /home/sd19/Desktop/git/sd-tp2/src/utils/Props.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/msgs/ListFolderV2Return.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/profiles/replicated/ReplicatedProfilesResources.java
-/home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/ListDirectory.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/dropbox/DropboxMedia.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/profiles/replicated/ProfilesReplicator.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/java/Result.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/RestResource.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/replication/kafka/KafkaClient.java
-/home/sd19/Desktop/git/sd-tp2/src/microgram/api/UserPosts.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/api/Likes.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/java/JavaPosts.java
 /home/sd19/Desktop/git/sd-tp2/src/microgram/impl/rest/posts/replicated/PostsReplicator.java

@@ -12,7 +12,7 @@ shared-process-backend-services-mainclass=microgram.impl.rest.MicrogramRestServe
 shared-process-backend-services-port=19999
 
 uses-kafka-bool=true
-uses-external-mongo-bool=true
+uses-external-mongo-bool=false
 
 microgram-keystore=/home/sd/microgram.ks
 microgram-keystore-password=microgram

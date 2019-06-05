@@ -2,8 +2,8 @@ package microgram.impl.mongo;
 
 import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
-import static microgram.api.java.Result.ErrorCode.CONFLICT;
-import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
+import static microgram.api.java.Result.ErrorCode.*;
+import static microgram.impl.mongo.MongoPosts.Posts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,6 @@ public class MongoProfiles implements Profiles {
 	
 	public MongoProfiles() {
 		Profiles = this;
-		
 		mongo = new MongoClient("localhost");
 		pojoCodecRegistry = CodecRegistries.fromRegistries(MongoClient.getDefaultCodecRegistry(),
 				CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
@@ -54,12 +53,16 @@ public class MongoProfiles implements Profiles {
 		
 		dbCol.createIndex(Indexes.ascending(USERID), new IndexOptions().unique(true));
 		dbFollowing.createIndex(Indexes.ascending("userId1", "userId2"), new IndexOptions().unique(true));
+		
 	}
 	
 	@Override
 	public Result<Profile> getProfile(String userId) {
 		Profile res = dbCol.find(Filters.eq(USERID, userId)).first();
 		if (res != null) {
+			res.setPosts((int) Posts.dbCol.countDocuments(Filters.eq("ownerId", userId)));
+			res.setFollowers((int) dbFollowing.countDocuments(Filters.eq("userId2", userId)));
+			res.setFollowing((int) dbFollowing.countDocuments(Filters.eq("userId1", userId)));
 			return ok(res);
 		} else
 			return error(NOT_FOUND);
@@ -78,7 +81,13 @@ public class MongoProfiles implements Profiles {
 	@Override
 	public Result<Void> deleteProfile(String userId) {
 		DeleteResult res = dbCol.deleteOne(Filters.eq(USERID, userId));
+		
+		//apagar likes, posts e follows
 		if (res.getDeletedCount() == 1) {
+			Posts.dbLikes.deleteMany(Filters.eq("userId", userId));
+			Posts.dbCol.deleteMany(Filters.eq("userId", userId));
+			dbFollowing.deleteMany(Filters.eq("userId1", userId));
+			dbFollowing.deleteMany(Filters.eq("userId2", userId));
 			return ok();
 		} else
 			return error(NOT_FOUND);
@@ -99,8 +108,8 @@ public class MongoProfiles implements Profiles {
 
 	@Override
 	public Result<Void> follow(String userId1, String userId2, boolean isFollowing) {
-		if (dbCol.find(Filters.eq("userId1", userId1)).first() == null
-				|| dbCol.find(Filters.eq("userId2", userId2)).first() == null)
+		if (dbCol.find(Filters.eq("userId", userId1)).first() == null
+				|| dbCol.find(Filters.eq("userId", userId2)).first() == null)
 			return error(NOT_FOUND);
 		else {
 			if (isFollowing) {
@@ -120,25 +129,13 @@ public class MongoProfiles implements Profiles {
 
 	@Override
 	public Result<Boolean> isFollowing(String userId1, String userId2) {
-		if (dbFollowing.find(Filters.eq("userId1", userId1)).first() == null
-				|| dbFollowing.find(Filters.eq("userId2", userId2)).first() == null)
+		if (dbCol.find(Filters.eq("userId", userId1)).first() == null
+				|| dbCol.find(Filters.eq("userId", userId2)).first() == null)
 			return error(NOT_FOUND);
 		else {
 			Following res = dbFollowing
 					.find(Filters.and(Filters.eq("userId1", userId1), Filters.eq("userId2", userId2))).first();
-			if (res != null)
-				return ok(true);
-			else
-				return ok(false);
+			return res != null ? ok(true) : ok(false);
 		}
-	}
-
-	public Result<List<String>> following(String userId) {
-		List<String> res = new ArrayList<>();
-		MongoCursor<Following> cursor = dbFollowing.find(Filters.eq("userId1", userId)).iterator();
-		while (cursor.hasNext()) {
-			res.add(cursor.next().getUserId2());
-		}
-		return ok(res);
 	}
 }

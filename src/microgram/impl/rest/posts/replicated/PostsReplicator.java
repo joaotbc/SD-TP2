@@ -39,11 +39,11 @@ public class PostsReplicator implements MicrogramOperationExecutor, Posts {
 		}
 		case LikePost: {
 			String[] args = op.args(String[].class);
-			return localReplicaDB.like(args[PostID], args[UserID], false);
+			return localReplicaDB.like(args[PostID], args[UserID], true);
 		}
 		case UnLikePost: {
 			String[] args = op.args(String[].class);
-			return localReplicaDB.like(args[PostID], args[UserID], true);
+			return localReplicaDB.like(args[PostID], args[UserID], false);
 		}
 		case IsLiked: {
 			String[] args = op.args(String[].class);
@@ -80,7 +80,7 @@ public class PostsReplicator implements MicrogramOperationExecutor, Posts {
 		String[] args = new String[2];
 		args[0] = postId;
 		args[1] = userId;
-		if(!isLiked)
+		if(isLiked)
 			return executor.replicate(new MicrogramOperation(LikePost, args));
 		else
 			return executor.replicate(new MicrogramOperation(UnLikePost, args));

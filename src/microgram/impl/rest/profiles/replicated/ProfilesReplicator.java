@@ -46,11 +46,11 @@ public class ProfilesReplicator implements MicrogramOperationExecutor, Profiles 
 		}
 		case FollowProfile: {
 			String[] users = op.args(String[].class);
-			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], false);
+			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], true);
 		}
 		case UnFollowProfile: {
 			String[] users = op.args(String[].class);
-			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], true);
+			return localReplicaDB.follow(users[FOLLOWER], users[FOLLOWEE], false);
 		}
 		default:
 			return error(NOT_IMPLEMENTED);
@@ -82,7 +82,7 @@ public class ProfilesReplicator implements MicrogramOperationExecutor, Profiles 
 		String[] args = new String[2];
 		args[0] = userId1;
 		args[1] = userId2;
-		if(!isFollowing)
+		if(isFollowing)
 			return executor.replicate(new MicrogramOperation(FollowProfile, args));
 		else
 			return executor.replicate(new MicrogramOperation(UnFollowProfile, args));
