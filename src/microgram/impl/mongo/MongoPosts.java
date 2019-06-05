@@ -3,7 +3,7 @@ package microgram.impl.mongo;
 import static microgram.api.java.Result.error;
 import static microgram.api.java.Result.ok;
 import static microgram.api.java.Result.ErrorCode.NOT_FOUND;
-import static microgram.impl.java.JavaProfiles.Profiles;
+import static microgram.impl.mongo.MongoProfiles.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,7 @@ import com.mongodb.client.model.Filters;
 
 import microgram.api.*;
 import microgram.api.java.Posts;
+import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 
 public class MongoPosts implements Posts {
@@ -39,6 +40,7 @@ public class MongoPosts implements Posts {
 	MongoCollection<Likes> dbLikes = dbPosts.getCollection("likesCol", Likes.class);
 	MongoCollection<UserPosts> dbUserPosts = dbPosts.getCollection("userPostsCol", UserPosts.class);
 	
+	
 	@Override
 	public Result<Post> getPost(String postId) {
 		// TODO Auto-generated method stub
@@ -54,8 +56,8 @@ public class MongoPosts implements Posts {
 		// TODO Auto-generated method stub
 		String ownerId = post.getOwnerId();
 		
-		if (!Profiles.getProfile(ownerId).isOK())
-			return error(NOT_FOUND);
+		//if (!Profiles.getProfile(ownerId).isOK())
+			//return error(NOT_FOUND);
 		
 		return null;
 	}
