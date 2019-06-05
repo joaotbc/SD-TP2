@@ -104,8 +104,14 @@ public class MongoProfiles implements Profiles {
 			return error(NOT_FOUND);
 		else {
 			if (isFollowing) {
+				if(isFollowing(userId1, userId2).value()) {
+					return error(CONFLICT);
+				} else
 				dbFollowing.insertOne(new Following(userId1, userId2));
 			} else {
+				if(!isFollowing(userId1, userId2).value()) {
+					return error(NOT_FOUND);
+				} else
 				dbFollowing.deleteOne(Filters.and(Filters.eq("userId1", userId1), Filters.eq("userId2", userId2)));
 			}
 		}
