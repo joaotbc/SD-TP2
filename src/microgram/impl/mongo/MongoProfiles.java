@@ -24,6 +24,8 @@ import microgram.api.java.Profiles;
 import microgram.api.java.Result;
 
 public class MongoProfiles implements Profiles {
+
+	static MongoProfiles Profiles;
 	
 	final String DB_NAME = "profilesDB";
 	final String DB_TABLE = "profilesTable";
@@ -38,7 +40,6 @@ public class MongoProfiles implements Profiles {
 
 	MongoCollection<Profile> dbCol = dbProfiles.getCollection(DB_TABLE, Profile.class);
 	
-	// Assim??
 	String indexProfiles = dbCol.createIndex(Indexes.ascending(USERID), new IndexOptions().unique(true));
 	
 	MongoCollection<Followers> dbFollowers = dbProfiles.getCollection(FOL_TABLE, Followers.class);

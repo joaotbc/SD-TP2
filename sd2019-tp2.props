@@ -16,8 +16,8 @@ uses-external-mongo-bool=false
 
 microgram-keystore=/home/sd/microgram.ks
 microgram-keystore-password=microgram
-microgram-truststore=
-microgram-truststore-password=
+microgram-truststore=/home/sd/client-truststore.ks
+microgram-truststore-password=changeit
 
 posts-keystore=
 posts-keystore-password=
@@ -29,8 +29,8 @@ profiles-keystore-password=
 profiles-truststore=
 profiles-truststore-password=
 
-mediastorage-truststore=
-mediastorage-truststore-password=
+mediastorage-truststore=/home/sd/client-truststore.ks
+mediastorage-truststore-password=changeit
 mediastorage-keystore=/home/sd/mediaserver.ks
 mediastorage-keystore-password=mediaserver
 
